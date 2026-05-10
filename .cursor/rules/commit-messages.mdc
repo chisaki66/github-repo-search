@@ -1,0 +1,32 @@
+---
+description: Git コミットメッセージの形式（feat / fix / chore）
+alwaysApply: true
+---
+
+# コミットメッセージ
+
+件名は短い **Conventional Commits** 形式にする: **`<type>: <説明>`**（type は小文字、コロン、半角スペース 1 つ、そのあと命令形の説明。英語・日本語どちらでも可）。
+
+## このリポジトリで使う type
+
+| Type | 用途 |
+|------|------|
+| `feat` | ユーザー向けの新しい挙動・機能 |
+| `fix` | 不具合修正、誤った挙動の修正 |
+| `chore` | ツール、依存関係、設定、ユーザーに見えないリファクタなど |
+
+## 例
+
+```text
+feat: add repository search filters
+fix: handle empty GitHub API response
+chore: bump next to 16.x
+```
+
+## ルール
+
+- 可能なら 1 コミット 1 論理変更。件名は目安 72 文字以内。
+- 件名の末尾にピリオドを付けない。
+- 破壊的変更がある場合は、運用に応じて `feat!:` / `fix!:` または本文に `BREAKING CHANGE:` フッターを付ける。
+
+ユーザー向けにコミットメッセージを提案・執筆するときは、特に指定がなければこの形式に従う。
