@@ -1,0 +1,92 @@
+import { githubGraphql } from "./graphql-fetch";
+
+export const SEARCH_REPOSITORIES_QUERY = `
+  query SearchRepositories($query: String!, $first: Int!, $after: String) {
+    search(query: $query, type: REPOSITORY, first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          ... on Repository {
+            name
+            owner {
+              ... on User {
+                login
+                avatarUrl
+              }
+              ... on Organization {
+                login
+                avatarUrl
+              }
+            }
+            primaryLanguage {
+              name
+            }
+            stargazerCount
+            watchers(first: 0) {
+              totalCount
+            }
+            forkCount
+            issues(first: 0, states: [OPEN]) {
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export type SearchRepositoriesVariables = {
+  query: string;
+  first: number;
+  after?: string | null;
+};
+
+export type SearchRepositoryOwner = {
+  login: string;
+  avatarUrl: string;
+};
+
+export type SearchRepositoryNode = {
+  name: string;
+  owner: SearchRepositoryOwner;
+  primaryLanguage: { name: string } | null;
+  stargazerCount: number;
+  watchers: { totalCount: number };
+  forkCount: number;
+  issues: { totalCount: number };
+};
+
+export type SearchRepositoriesData = {
+  search: {
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string | null;
+    };
+    edges: Array<{
+      cursor: string;
+      node: SearchRepositoryNode | null;
+    } | null> | null;
+  };
+};
+
+export async function searchRepositories(
+  variables: SearchRepositoriesVariables,
+  options?: { accessToken?: string },
+): Promise<SearchRepositoriesData> {
+  const { query, first, after } = variables;
+  return githubGraphql<SearchRepositoriesData>(
+    {
+      query: SEARCH_REPOSITORIES_QUERY,
+      variables:
+        after != null && after !== ""
+          ? { query, first, after }
+          : { query, first },
+    },
+    options,
+  );
+}
