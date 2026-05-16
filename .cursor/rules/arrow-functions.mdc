@@ -1,0 +1,72 @@
+---
+description: TypeScript/JavaScript は function 宣言を使わず const + アロー関数に統一する
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# アロー関数（const）への統一
+
+`app/`・`components/`・`lib/` など、このリポジトリの **`.ts` / `.tsx` では `function` 宣言を使わない**。名前付き関数は **`const` + アロー関数** で書く。
+
+## 基本
+
+```typescript
+// ❌ BAD
+function helper() { ... }
+export function doSomething() { ... }
+export async function GET(request: Request) { ... }
+
+// ✅ GOOD
+const helper = () => { ... };
+export const doSomething = () => { ... };
+export const GET = async (request: Request) => { ... };
+```
+
+## コンポーネント・ページ
+
+```tsx
+// ❌ BAD
+export function HomePage() { ... }
+export default function Home() { ... }
+
+// ✅ GOOD
+export const HomePage = () => { ... };
+
+const Home = () => { ... };
+export default Home;
+```
+
+## 非同期・ジェネリクス
+
+```typescript
+// ✅ GOOD
+export const searchRepositories = async (
+  variables: SearchRepositoriesVariables,
+): Promise<SearchRepositoriesData> => { ... };
+
+export const githubGraphql = async <TData>(
+  request: GithubGraphqlRequest,
+): Promise<TData> => { ... };
+```
+
+`.tsx` でジェネリクス付きアローを書くときは、JSX と紛らわしい場合は `const fn = <T,>(...) =>` のように **カンマ付きジェネリクス** を使う。
+
+## イベントハンドラ（React 19）
+
+`onSubmit` には非推奨の `FormEvent` ではなく `SubmitEvent` を使う。
+
+```tsx
+import { type SubmitEvent } from "react";
+
+const handleSearch = async (event: SubmitEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  ...
+};
+```
+
+## 例外
+
+- 外部ライブラリが要求するシグネチャはそのまま従う
+- 既存ファイルを触るときは、周辺を `function` に戻さず、このルールに合わせる
+
+新規コード・リファクタ時は、上記に合わせて `function` を `const` + アロー関数へ置き換える。
