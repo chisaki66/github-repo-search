@@ -2,11 +2,20 @@
 
 import { type SubmitEvent, useState } from "react";
 
-import { searchRepositoriesClient } from "@/lib/github";
+import { RepositoryList } from "@/components/home/repository-list";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  searchRepositoriesClient,
+  type RepositorySearchResult,
+} from "@/lib/github";
 
 export const HomePage = () => {
   const [repositoryName, setRepositoryName] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [repositories, setRepositories] = useState<RepositorySearchResult[]>(
+    [],
+  );
 
   const handleSearch = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,9 +27,11 @@ export const HomePage = () => {
 
     setIsSearching(true);
     try {
-      await searchRepositoriesClient(trimmed);
+      const results = await searchRepositoriesClient(trimmed);
+      setRepositories(results);
     } catch (error) {
       console.error(error);
+      setRepositories([]);
     } finally {
       setIsSearching(false);
     }
@@ -32,23 +43,24 @@ export const HomePage = () => {
         onSubmit={handleSearch}
         className="flex max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
       >
-        <input
+        <Input
           type="search"
           name="repositoryName"
           value={repositoryName}
           onChange={(event) => setRepositoryName(event.target.value)}
           placeholder="リポジトリ名を入力してください"
-          className="min-w-0 flex-1 rounded-lg border border-neutral-300 px-4 py-2 text-base text-foreground outline-none focus:border-neutral-500"
+          className="h-10 flex-1 text-base"
           autoComplete="off"
         />
-        <button
+        <Button
           type="submit"
           disabled={isSearching}
-          className="rounded-full border border-neutral-800 bg-neutral-900 px-6 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-10 shrink-0 rounded-lg px-6"
         >
           {isSearching ? "検索中…" : "検索"}
-        </button>
+        </Button>
       </form>
+      <RepositoryList repositories={repositories} />
     </main>
   );
 };
