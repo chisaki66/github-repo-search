@@ -1,5 +1,5 @@
 /** リポジトリ名検索用に GitHub search クエリ文字列へ変換する */
-export function buildRepositorySearchQuery(userInput: string): string {
+export const buildRepositorySearchQuery = (userInput: string): string => {
   const trimmed = userInput.trim();
   if (!trimmed) {
     return "";
@@ -11,4 +11,4 @@ export function buildRepositorySearchQuery(userInput: string): string {
   }
 
   return `${trimmed} in:name`;
-}
+};

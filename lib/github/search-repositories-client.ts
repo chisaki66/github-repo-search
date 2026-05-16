@@ -5,9 +5,9 @@ export type RepositorySearchResult = {
   repositoryName: string;
 };
 
-function toSearchResults(
+const toSearchResults = (
   data: SearchRepositoriesData,
-): RepositorySearchResult[] {
+): RepositorySearchResult[] => {
   const edges = data.search.edges ?? [];
 
   return edges.flatMap((edge) => {
@@ -23,11 +23,11 @@ function toSearchResults(
       },
     ];
   });
-}
+};
 
-export async function searchRepositoriesClient(
+export const searchRepositoriesClient = async (
   repositoryName: string,
-): Promise<RepositorySearchResult[]> {
+): Promise<RepositorySearchResult[]> => {
   const q = repositoryName.trim();
   if (!q) {
     return [];
@@ -44,4 +44,4 @@ export async function searchRepositoriesClient(
 
   const data = (await response.json()) as SearchRepositoriesData;
   return toSearchResults(data);
-}
+};

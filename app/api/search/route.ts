@@ -8,11 +8,11 @@ export const runtime = "nodejs";
 const DEFAULT_FIRST = 20;
 const MAX_FIRST = 100;
 
-function jsonError(message: string, status: number) {
+const jsonError = (message: string, status: number) => {
   return NextResponse.json({ error: message }, { status });
-}
+};
 
-function parseFirstFromSearchParam(value: string | null): number | null {
+const parseFirstFromSearchParam = (value: string | null): number | null => {
   if (value === null || value === "") {
     return DEFAULT_FIRST;
   }
@@ -21,9 +21,9 @@ function parseFirstFromSearchParam(value: string | null): number | null {
     return null;
   }
   return n;
-}
+};
 
-function handleSearchFailure(error: unknown) {
+const handleSearchFailure = (error: unknown) => {
   const message = error instanceof Error ? error.message : "";
 
   if (
@@ -50,9 +50,9 @@ function handleSearchFailure(error: unknown) {
   }
 
   return jsonError("GitHub search failed", 502);
-}
+};
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim() ?? "";
   if (!q) {
@@ -80,9 +80,9 @@ export async function GET(request: Request) {
   } catch (error) {
     return handleSearchFailure(error);
   }
-}
+};
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   let body: unknown;
   try {
     body = await request.json();
@@ -133,4 +133,4 @@ export async function POST(request: Request) {
   } catch (error) {
     return handleSearchFailure(error);
   }
-}
+};

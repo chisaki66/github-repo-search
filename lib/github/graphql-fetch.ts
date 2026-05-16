@@ -16,17 +16,17 @@ type GithubGraphqlResponseBody<TData> = {
   message?: string;
 };
 
-function resolveAuthHeaders(accessToken?: string): Record<string, string> {
+const resolveAuthHeaders = (accessToken?: string): Record<string, string> => {
   if (accessToken !== undefined) {
     return createGithubGraphqlHeaders(accessToken);
   }
   return createGithubGraphqlHeadersFromEnv();
-}
+};
 
-export async function githubGraphql<TData>(
+export const githubGraphql = async <TData>(
   request: GithubGraphqlRequest,
   options?: { accessToken?: string },
-): Promise<TData> {
+): Promise<TData> => {
   const headers = resolveAuthHeaders(options?.accessToken);
 
   const response = await fetch(GITHUB_GRAPHQL_API_URL, {
@@ -75,4 +75,4 @@ export async function githubGraphql<TData>(
   }
 
   return body.data;
-}
+};

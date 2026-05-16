@@ -55,10 +55,10 @@ export type SearchRepositoriesData = {
   };
 };
 
-export async function searchRepositories(
+export const searchRepositories = async (
   variables: SearchRepositoriesVariables,
   options?: { accessToken?: string },
-): Promise<SearchRepositoriesData> {
+): Promise<SearchRepositoriesData> => {
   const { query, first, after } = variables;
   return githubGraphql<SearchRepositoriesData>(
     {
@@ -70,4 +70,4 @@ export async function searchRepositories(
     },
     options,
   );
-}
+};

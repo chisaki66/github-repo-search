@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { type SubmitEvent, useState } from "react";
 
 import { searchRepositoriesClient } from "@/lib/github";
 
-export function HomePage() {
+export const HomePage = () => {
   const [repositoryName, setRepositoryName] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  async function handleSearch(event: React.FormEvent<HTMLFormElement>) {
+  const handleSearch = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmed = repositoryName.trim();
@@ -24,7 +24,7 @@ export function HomePage() {
     } finally {
       setIsSearching(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-0 flex-1 p-6">
@@ -51,4 +51,4 @@ export function HomePage() {
       </form>
     </main>
   );
-}
+};
