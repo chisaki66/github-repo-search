@@ -13,12 +13,8 @@ export const SEARCH_REPOSITORIES_QUERY = `
           ... on Repository {
             name
             owner {
-              ... on User {
-                avatarUrl
-              }
-              ... on Organization {
-                avatarUrl
-              }
+              login
+              avatarUrl
             }
           }
         }
@@ -34,6 +30,7 @@ export type SearchRepositoriesVariables = {
 };
 
 export type SearchRepositoryOwner = {
+  login: string;
   avatarUrl: string;
 };
 

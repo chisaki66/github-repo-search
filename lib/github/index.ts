@@ -20,3 +20,11 @@ export {
   searchRepositoriesClient,
   type RepositorySearchResult,
 } from "./search-repositories-client";
+export {
+  GET_REPOSITORY_QUERY,
+  getRepository,
+  toRepositoryDetail,
+  type GetRepositoryData,
+  type GetRepositoryVariables,
+  type RepositoryDetail,
+} from "./get-repository";

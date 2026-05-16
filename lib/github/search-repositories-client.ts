@@ -2,6 +2,7 @@ import type { SearchRepositoriesData } from "./search-repositories";
 
 export type RepositorySearchResult = {
   icon: string;
+  ownerLogin: string;
   repositoryName: string;
 };
 
@@ -12,13 +13,14 @@ const toSearchResults = (
 
   return edges.flatMap((edge) => {
     const node = edge?.node;
-    if (!node?.owner?.avatarUrl || !node.name) {
+    if (!node?.owner?.avatarUrl || !node.owner.login || !node.name) {
       return [];
     }
 
     return [
       {
         icon: node.owner.avatarUrl,
+        ownerLogin: node.owner.login,
         repositoryName: node.name,
       },
     ];
