@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { Suspense } from "react";
+
+import { BackToHomeLink } from "@/components/navigation";
 
 const RepositoryNotFound = () => {
   return (
@@ -6,12 +8,15 @@ const RepositoryNotFound = () => {
       <p className="text-base text-foreground">
         リポジトリが見つかりませんでした。
       </p>
-      <Link
-        href="/"
-        className="mt-4 inline-block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+      <Suspense
+        fallback={
+          <span className="mt-4 inline-block text-sm text-muted-foreground">
+            トップページへ戻る
+          </span>
+        }
       >
-        トップページへ戻る
-      </Link>
+        <BackToHomeLink className="mt-4 inline-block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" />
+      </Suspense>
     </main>
   );
 };

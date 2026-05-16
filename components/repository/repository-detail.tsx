@@ -1,6 +1,7 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 
+import { BackToHomeLink } from "@/components/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { RepositoryDetail } from "@/lib/github";
 
@@ -28,13 +29,19 @@ export const RepositoryDetailView = ({
 }: RepositoryDetailViewProps) => {
   return (
     <main className="min-h-0 flex-1 p-6">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+      <Suspense
+        fallback={
+          <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <ArrowLeft className="size-4" aria-hidden />
+            トップページへ戻る
+          </span>
+        }
       >
-        <ArrowLeft className="size-4" aria-hidden />
-        トップページへ戻る
-      </Link>
+        <BackToHomeLink className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <ArrowLeft className="size-4" aria-hidden />
+          トップページへ戻る
+        </BackToHomeLink>
+      </Suspense>
 
       <div className="mt-8 flex items-start gap-4">
         <Avatar className="size-16">
