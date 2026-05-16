@@ -1,0 +1,50 @@
+---
+description: UI では shadcn/ui コンポーネントを優先して使う
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# shadcn/ui の利用
+
+このプロジェクトは [shadcn/ui](https://ui.shadcn.com/)（`components.json` の **base-nova** スタイル）を採用している。**ボタン・入力・ダイアログなど汎用 UI プリミティブが必要なときは、生の HTML + Tailwind を一から書かず `@/components/ui` の shadcn コンポーネントを使う。**
+
+## 使うべき箇所
+
+| 用途 | コンポーネント |
+|------|----------------|
+| ボタン | `Button`（`@/components/ui/button`） |
+| テキスト入力 | `Input`（`@/components/ui/input`） |
+| アバター | `Avatar` 系（`@/components/ui/avatar`） |
+| その他 | カード・ダイアログ・セレクト・トーストなど、shadcn が提供する部品 |
+
+機能固有の画面・レイアウトは `components/home/` などに置き、**見た目・挙動の土台は shadcn に寄せる**。
+
+## コンポーネントが無いとき
+
+1. [shadcn/ui ドキュメント](https://ui.shadcn.com/docs/components) で該当コンポーネントを確認する
+2. 未導入なら CLI で追加: `npx shadcn@latest add <component>`（既存の `components.json` に従う）
+3. 生成された `components/ui/<name>.tsx` を `@/components/ui/<name>` から import する
+
+## スタイルの調整
+
+- クラス結合には `cn()`（`@/lib/utils`）を使う
+- 差分は `className` で足す（`components/home/home-page.tsx` の `Input` / `Button` を参照）
+
+## 避けること
+
+- shadcn で代替できる要素を `<button className="...">` や `<input className="...">` で再実装しない
+- `components/ui/` にアプリ固有のビジネスロジックを入れない（ラッパーは `components/home/` などに置く）
+
+## 例
+
+```tsx
+// ❌ BAD
+<button type="submit" className="rounded-lg bg-primary px-6 py-2">
+  検索
+</button>
+
+// ✅ GOOD
+import { Button } from "@/components/ui/button";
+
+<Button type="submit">検索</Button>
+```
