@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { searchRepositories } from "@/lib/github";
+import { buildRepositorySearchQuery, searchRepositories } from "@/lib/github";
 
 export const runtime = "nodejs";
 
@@ -71,7 +71,11 @@ export async function GET(request: Request) {
   const after = afterRaw ? afterRaw : undefined;
 
   try {
-    const data = await searchRepositories({ query: q, first, after });
+    const data = await searchRepositories({
+      query: buildRepositorySearchQuery(q),
+      first,
+      after,
+    });
     return NextResponse.json(data);
   } catch (error) {
     return handleSearchFailure(error);
@@ -120,7 +124,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const data = await searchRepositories({ query: q, first, after });
+    const data = await searchRepositories({
+      query: buildRepositorySearchQuery(q),
+      first,
+      after,
+    });
     return NextResponse.json(data);
   } catch (error) {
     return handleSearchFailure(error);

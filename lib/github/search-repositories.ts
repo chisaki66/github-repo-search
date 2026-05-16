@@ -14,24 +14,11 @@ export const SEARCH_REPOSITORIES_QUERY = `
             name
             owner {
               ... on User {
-                login
                 avatarUrl
               }
               ... on Organization {
-                login
                 avatarUrl
               }
-            }
-            primaryLanguage {
-              name
-            }
-            stargazerCount
-            watchers(first: 0) {
-              totalCount
-            }
-            forkCount
-            issues(first: 0, states: [OPEN]) {
-              totalCount
             }
           }
         }
@@ -47,18 +34,12 @@ export type SearchRepositoriesVariables = {
 };
 
 export type SearchRepositoryOwner = {
-  login: string;
   avatarUrl: string;
 };
 
 export type SearchRepositoryNode = {
   name: string;
   owner: SearchRepositoryOwner;
-  primaryLanguage: { name: string } | null;
-  stargazerCount: number;
-  watchers: { totalCount: number };
-  forkCount: number;
-  issues: { totalCount: number };
 };
 
 export type SearchRepositoriesData = {

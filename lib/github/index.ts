@@ -1,3 +1,4 @@
+export { buildRepositorySearchQuery } from "./build-repository-search-query";
 export {
   createGithubGraphqlHeaders,
   createGithubGraphqlHeadersFromEnv,
@@ -15,3 +16,7 @@ export {
   type SearchRepositoryNode,
   type SearchRepositoryOwner,
 } from "./search-repositories";
+export {
+  searchRepositoriesClient,
+  type RepositorySearchResult,
+} from "./search-repositories-client";
