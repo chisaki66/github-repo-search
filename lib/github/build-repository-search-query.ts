@@ -5,10 +5,5 @@ export const buildRepositorySearchQuery = (userInput: string): string => {
     return "";
   }
 
-  // 既に GitHub の検索修飾子を含む場合はそのまま渡す
-  if (/\b(in:|user:|org:|repo:|language:|stars:|fork:)/i.test(trimmed)) {
-    return trimmed;
-  }
-
   return `${trimmed} in:name`;
 };

@@ -12,7 +12,9 @@ export const useSearchQuery = (query: string, page: number) => {
   const router = useRouter();
   const trimmed = query.trim();
 
-  const infiniteQuery = useInfiniteQuery(getSearchInfiniteQueryOptions(trimmed));
+  const infiniteQuery = useInfiniteQuery(
+    getSearchInfiniteQueryOptions(trimmed),
+  );
 
   const loadedPageCount = infiniteQuery.data?.pages.length ?? 0;
   const needsMorePages =
