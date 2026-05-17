@@ -5,6 +5,7 @@ import { type SubmitEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { RepositoryList } from "@/components/home/repository-list";
+import { SearchResultsLoading } from "@/components/home/search-results-loading";
 import { SearchPagination } from "@/components/home/search-pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,11 @@ const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
     page,
   );
 
-  if (repositories.length === 0 && !isLoading) {
+  if (isLoading) {
+    return <SearchResultsLoading />;
+  }
+
+  if (repositories.length === 0) {
     return null;
   }
 

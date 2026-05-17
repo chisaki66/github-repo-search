@@ -73,11 +73,13 @@ export const useSearchQuery = (query: string, page: number) => {
   ]);
 
   const currentPageData = infiniteQuery.data?.pages[page - 1];
+  const isPageDataReady = currentPageData !== undefined;
   const isLoading =
     trimmed.length > 0 &&
+    !isPageDataReady &&
     (infiniteQuery.isPending ||
-      needsMorePages ||
-      (page > loadedPageCount && infiniteQuery.isFetching));
+      infiniteQuery.isFetching ||
+      infiniteQuery.isFetchingNextPage);
 
   return {
     repositories: currentPageData?.results ?? [],
