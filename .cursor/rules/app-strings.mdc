@@ -1,0 +1,59 @@
+---
+description: 2箇所以上で使うユーザー向け文言は lib/constants に定数化する
+alwaysApply: true
+---
+
+# ユーザー向け文言の定数化
+
+**同じユーザー向けテキスト（ラベル・ボタン文言・ページタイトル・プレースホルダーなど）がプロジェクト内で 2 箇所以上あるときは、文字列リテラルを直書きせず `lib/constants/` 配下の専用ファイルに export して import する。**
+
+## 置き場所
+
+| 種類 | ファイル例 |
+|------|------------|
+| アプリ全体（タイトル・共通ナビ文言など） | `lib/constants/app-strings.ts` |
+
+- 新しい定数は既存ファイルに追記する。カテゴリが大きく分かれるときだけ `lib/constants/<topic>.ts` を追加する。
+- コンポーネント内の `const APP_TITLE = "..."` のようなローカル定数は作らない。
+
+## 命名
+
+- 定数は `SCREAMING_SNAKE_CASE`（例: `APP_TITLE`, `BACK_TO_HOME_LABEL`）。
+- 同じベース文字列から組み立てる値はヘルパー関数にする（例: `formatAppPageTitle(segment)`）。
+
+## 対象
+
+- metadata の `title` / `description`
+- ボタン・リンク・プレースホルダー・空状態・エラー画面の表示文言
+- JSX のテキストノードと、props のデフォルト値（`children = "..."` など）
+
+## 対象外
+
+- **1 箇所だけ**で使う文言（無理に共通化しない）
+- Tailwind のクラス名、URL、API パラメータ名、React Query の `queryKey` など技術的識別子
+- 1 モジュール内に閉じたエラーメッセージ（他ファイルと重複していないもの）
+
+## 例
+
+```tsx
+// ❌ BAD — 同じ文言を複数ファイルに直書き
+// app/layout.tsx
+title: "GitHub Repo Search",
+// components/navigation/site-header.tsx
+const APP_TITLE = "GitHub Repo Search";
+
+// ✅ GOOD
+import { APP_TITLE } from "@/lib/constants/app-strings";
+```
+
+```tsx
+// ❌ BAD — ページタイトル用に APP_TITLE を再定義
+title: `${owner}/${repo} | GitHub Repo Search`,
+
+// ✅ GOOD
+import { formatAppPageTitle } from "@/lib/constants/app-strings";
+
+title: formatAppPageTitle(`${owner}/${repo}`),
+```
+
+新規・変更時は、既存の `lib/constants/app-strings.ts` に同じ文字列がないか確認し、重複があればそこへ集約する。

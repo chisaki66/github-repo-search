@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { BackToHomeLink } from "@/components/navigation";
+import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
 
 const RepositoryNotFound = () => {
   return (
@@ -11,7 +12,7 @@ const RepositoryNotFound = () => {
       <Suspense
         fallback={
           <span className="mt-4 inline-block text-sm text-muted-foreground">
-            トップページへ戻る
+            {BACK_TO_HOME_LABEL}
           </span>
         }
       >

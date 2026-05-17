@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 
 import { SiteHeader } from "@/components/navigation/site-header";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { APP_TITLE } from "@/lib/constants/app-strings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,7 +12,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "GitHub Repo Search",
+  title: APP_TITLE,
   description: "Search GitHub repositories from the browser.",
 };
 

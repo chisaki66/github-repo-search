@@ -9,6 +9,7 @@ import {
   buildHomeHref,
   parseHomePageParam,
 } from "@/lib/navigation/search-query-url";
+import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
 
 type BackToHomeLinkProps = {
   children?: React.ReactNode;
@@ -16,7 +17,7 @@ type BackToHomeLinkProps = {
 };
 
 export const BackToHomeLink = ({
-  children = "トップページへ戻る",
+  children = BACK_TO_HOME_LABEL,
   className,
 }: BackToHomeLinkProps) => {
   const searchParams = useSearchParams();

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { RepositoryDetailView } from "@/components/repository";
+import { formatAppPageTitle } from "@/lib/constants/app-strings";
 import { getRepository } from "@/lib/github";
 
 type RepositoryPageProps = {
@@ -17,7 +18,7 @@ export const generateMetadata = async ({
   const { owner, repo } = await params;
 
   return {
-    title: `${owner}/${repo} | GitHub Repo Search`,
+    title: formatAppPageTitle(`${owner}/${repo}`),
   };
 };
 

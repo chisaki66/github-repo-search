@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { BackToHomeLink } from "@/components/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
 import type { RepositoryDetail } from "@/lib/github";
 
 type RepositoryDetailViewProps = {
@@ -33,13 +34,13 @@ export const RepositoryDetailView = ({
         fallback={
           <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
             <ArrowLeft className="size-4" aria-hidden />
-            トップページへ戻る
+            {BACK_TO_HOME_LABEL}
           </span>
         }
       >
         <BackToHomeLink className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <ArrowLeft className="size-4" aria-hidden />
-          トップページへ戻る
+          {BACK_TO_HOME_LABEL}
         </BackToHomeLink>
       </Suspense>
 

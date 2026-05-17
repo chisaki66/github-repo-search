@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
 
-const APP_TITLE = "GitHub Repo Search";
+import { APP_TITLE } from "@/lib/constants/app-strings";
 
 export const SiteHeader = () => {
   const router = useRouter();
