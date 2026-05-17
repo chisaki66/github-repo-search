@@ -46,12 +46,6 @@ export const searchRepositoriesClient = async (
   },
 ): Promise<RepositorySearchPage> => {
   const q = repositoryName.trim();
-  if (!q) {
-    return {
-      results: [],
-      pageInfo: { hasNextPage: false, endCursor: null },
-    };
-  }
 
   const params = new URLSearchParams({
     q,
