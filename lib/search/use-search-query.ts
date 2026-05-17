@@ -45,7 +45,6 @@ export const useSearchQuery = (query: string, page: number) => {
     }
 
     const currentPageData = infiniteQuery.data?.pages[page - 1];
-    const lastLoadedPage = infiniteQuery.data?.pages[loadedPageCount - 1];
 
     const isPastLastPage = page > loadedPageCount;
     const isEmptyPage =
@@ -85,7 +84,5 @@ export const useSearchQuery = (query: string, page: number) => {
     repositories: currentPageData?.results ?? [],
     hasNextPage: currentPageData?.pageInfo.hasNextPage ?? false,
     isLoading,
-    isError: infiniteQuery.isError,
-    error: infiniteQuery.error,
   };
 };

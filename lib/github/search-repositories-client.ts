@@ -43,7 +43,6 @@ export const searchRepositoriesClient = async (
   repositoryName: string,
   options?: {
     after?: string | null;
-    first?: number;
   },
 ): Promise<RepositorySearchPage> => {
   const q = repositoryName.trim();
@@ -56,7 +55,7 @@ export const searchRepositoriesClient = async (
 
   const params = new URLSearchParams({
     q,
-    first: String(options?.first ?? SEARCH_PAGE_SIZE),
+    first: String(SEARCH_PAGE_SIZE),
   });
 
   const after = options?.after?.trim();

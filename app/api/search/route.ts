@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { buildRepositorySearchQuery, searchRepositories } from "@/lib/github";
+import { SEARCH_PAGE_SIZE } from "@/lib/search/search-page-size";
 
 export const runtime = "nodejs";
 
-// 1回の取得件数。GitHub の search は first に上限があるため、API 側でも 1〜100 に制限する（省略時は 20）。
-const DEFAULT_FIRST = 20;
 const MAX_FIRST = 100;
 
 const jsonError = (message: string, status: number) => {
@@ -14,7 +13,7 @@ const jsonError = (message: string, status: number) => {
 
 const parseFirstFromSearchParam = (value: string | null): number | null => {
   if (value === null || value === "") {
-    return DEFAULT_FIRST;
+    return SEARCH_PAGE_SIZE;
   }
   const n = Number.parseInt(value, 10);
   if (!Number.isFinite(n) || n < 1 || n > MAX_FIRST) {
@@ -69,59 +68,6 @@ export const GET = async (request: Request) => {
 
   const afterRaw = url.searchParams.get("after")?.trim();
   const after = afterRaw ? afterRaw : undefined;
-
-  try {
-    const data = await searchRepositories({
-      query: buildRepositorySearchQuery(q),
-      first,
-      after,
-    });
-    return NextResponse.json(data);
-  } catch (error) {
-    return handleSearchFailure(error);
-  }
-};
-
-export const POST = async (request: Request) => {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return jsonError("Invalid JSON body", 400);
-  }
-
-  if (body === null || typeof body !== "object" || Array.isArray(body)) {
-    return jsonError("Body must be a JSON object", 400);
-  }
-
-  const record = body as Record<string, unknown>;
-  const q = typeof record.q === "string" ? record.q.trim() : "";
-  if (!q) {
-    return jsonError("Missing or empty string field q", 400);
-  }
-
-  let first = DEFAULT_FIRST;
-  if (record.first !== undefined && record.first !== null) {
-    const n =
-      typeof record.first === "number"
-        ? record.first
-        : Number.parseInt(String(record.first), 10);
-    if (!Number.isFinite(n) || n < 1 || n > MAX_FIRST) {
-      return jsonError(
-        `first must be an integer between 1 and ${MAX_FIRST}`,
-        400,
-      );
-    }
-    first = Math.trunc(n);
-  }
-
-  let after: string | undefined;
-  if (typeof record.after === "string") {
-    const trimmed = record.after.trim();
-    if (trimmed) {
-      after = trimmed;
-    }
-  }
 
   try {
     const data = await searchRepositories({
