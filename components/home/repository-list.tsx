@@ -7,11 +7,13 @@ import { buildRepositoryHref } from "@/lib/navigation/search-query-url";
 type RepositoryListProps = {
   repositories: RepositorySearchResult[];
   searchQuery: string;
+  page: number;
 };
 
 export const RepositoryList = ({
   repositories,
   searchQuery,
+  page,
 }: RepositoryListProps) => {
   return (
     <ul className="mt-6 flex flex-col gap-3">
@@ -22,6 +24,7 @@ export const RepositoryList = ({
               repository.ownerLogin,
               repository.repositoryName,
               searchQuery,
+              page,
             )}
             className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
           >

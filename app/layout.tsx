@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 
+import { SiteHeader } from "@/components/navigation/site-header";
 import { QueryProvider } from "@/components/providers/query-provider";
 import "./globals.css";
 
@@ -26,7 +27,10 @@ const RootLayout = ({
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <SiteHeader />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

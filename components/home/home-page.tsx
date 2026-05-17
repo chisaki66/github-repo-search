@@ -38,7 +38,11 @@ const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
 
   return (
     <>
-      <RepositoryList repositories={repositories} searchQuery={searchQuery} />
+      <RepositoryList
+        repositories={repositories}
+        searchQuery={searchQuery}
+        page={page}
+      />
       <SearchPagination
         searchQuery={searchQuery}
         currentPage={page}

@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { buildHomeHref } from "@/lib/navigation/search-query-url";
+import {
+  HOME_PAGE_PARAM,
+  HOME_SEARCH_QUERY_PARAM,
+  buildHomeHref,
+  parseHomePageParam,
+} from "@/lib/navigation/search-query-url";
 
 type BackToHomeLinkProps = {
   children?: React.ReactNode;
@@ -15,7 +20,10 @@ export const BackToHomeLink = ({
   className,
 }: BackToHomeLinkProps) => {
   const searchParams = useSearchParams();
-  const href = buildHomeHref(searchParams.get("q"));
+  const href = buildHomeHref(
+    searchParams.get(HOME_SEARCH_QUERY_PARAM),
+    parseHomePageParam(searchParams.get(HOME_PAGE_PARAM)),
+  );
 
   return (
     <Link href={href} className={className}>

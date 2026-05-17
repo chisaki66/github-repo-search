@@ -39,13 +39,22 @@ export const buildRepositoryHref = (
   ownerLogin: string,
   repositoryName: string,
   searchQuery?: string | null,
+  page?: number | null,
 ): string => {
   const base = `/repos/${encodeURIComponent(ownerLogin)}/${encodeURIComponent(repositoryName)}`;
   const trimmed = searchQuery?.trim();
+  const pageNumber = page ?? 1;
 
   if (!trimmed) {
     return base;
   }
 
-  return `${base}?${HOME_SEARCH_QUERY_PARAM}=${encodeURIComponent(trimmed)}`;
+  const params = new URLSearchParams();
+  params.set(HOME_SEARCH_QUERY_PARAM, trimmed);
+
+  if (pageNumber > 1) {
+    params.set(HOME_PAGE_PARAM, String(pageNumber));
+  }
+
+  return `${base}?${params.toString()}`;
 };
