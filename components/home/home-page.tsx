@@ -49,21 +49,21 @@ const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
   );
 };
 
-export const HomePage = () => {
+type SearchFormProps = {
+  initialQuery: string;
+  queryFromUrl: string;
+  pageFromUrl: number;
+};
+
+const SearchForm = ({
+  initialQuery,
+  queryFromUrl,
+  pageFromUrl,
+}: SearchFormProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const searchParams = useSearchParams();
-  const queryFromUrl = searchParams.get(HOME_SEARCH_QUERY_PARAM) ?? "";
-  const pageFromUrl = parseHomePageParam(searchParams.get(HOME_PAGE_PARAM));
-
-  const [repositoryName, setRepositoryName] = useState(queryFromUrl);
-  const [syncedQuery, setSyncedQuery] = useState(queryFromUrl);
+  const [repositoryName, setRepositoryName] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
-
-  if (queryFromUrl !== syncedQuery) {
-    setSyncedQuery(queryFromUrl);
-    setRepositoryName(queryFromUrl);
-  }
 
   const handleSearch = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,31 +92,45 @@ export const HomePage = () => {
     }
   };
 
+  return (
+    <form
+      onSubmit={handleSearch}
+      className="flex max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
+    >
+      <Input
+        type="search"
+        name="repositoryName"
+        value={repositoryName}
+        onChange={(event) => setRepositoryName(event.target.value)}
+        placeholder="リポジトリ名を入力してください"
+        className="h-10 flex-1 text-base"
+        autoComplete="off"
+      />
+      <Button
+        type="submit"
+        disabled={isSearching}
+        className="h-10 shrink-0 rounded-lg px-6"
+      >
+        {isSearching ? "検索中…" : "検索"}
+      </Button>
+    </form>
+  );
+};
+
+export const HomePage = () => {
+  const searchParams = useSearchParams();
+  const queryFromUrl = searchParams.get(HOME_SEARCH_QUERY_PARAM) ?? "";
+  const pageFromUrl = parseHomePageParam(searchParams.get(HOME_PAGE_PARAM));
   const trimmedQuery = queryFromUrl.trim();
 
   return (
     <main className="min-h-0 flex-1 p-6">
-      <form
-        onSubmit={handleSearch}
-        className="flex max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
-      >
-        <Input
-          type="search"
-          name="repositoryName"
-          value={repositoryName}
-          onChange={(event) => setRepositoryName(event.target.value)}
-          placeholder="リポジトリ名を入力してください"
-          className="h-10 flex-1 text-base"
-          autoComplete="off"
-        />
-        <Button
-          type="submit"
-          disabled={isSearching}
-          className="h-10 shrink-0 rounded-lg px-6"
-        >
-          {isSearching ? "検索中…" : "検索"}
-        </Button>
-      </form>
+      <SearchForm
+        key={queryFromUrl}
+        initialQuery={queryFromUrl}
+        queryFromUrl={queryFromUrl}
+        pageFromUrl={pageFromUrl}
+      />
       {trimmedQuery ? (
         <SearchResults searchQuery={trimmedQuery} page={pageFromUrl} />
       ) : null}

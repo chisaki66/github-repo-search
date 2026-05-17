@@ -1,8 +1,7 @@
 import { searchRepositoriesClient } from "@/lib/github";
 import type { RepositorySearchPage } from "@/lib/github/search-repositories-client";
 
-export const searchQueryKey = (query: string) =>
-  ["search", query.trim()] as const;
+const searchQueryKey = (query: string) => ["search", query.trim()] as const;
 
 export const getSearchInfiniteQueryOptions = (query: string) => {
   const trimmed = query.trim();

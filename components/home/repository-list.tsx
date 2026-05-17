@@ -6,17 +6,13 @@ import { buildRepositoryHref } from "@/lib/navigation/search-query-url";
 
 type RepositoryListProps = {
   repositories: RepositorySearchResult[];
-  searchQuery?: string;
+  searchQuery: string;
 };
 
 export const RepositoryList = ({
   repositories,
   searchQuery,
 }: RepositoryListProps) => {
-  if (repositories.length === 0) {
-    return null;
-  }
-
   return (
     <ul className="mt-6 flex flex-col gap-3">
       {repositories.map((repository) => (
