@@ -64,8 +64,8 @@ export const SearchPagination = ({
   };
 
   return (
-    <Pagination className="mt-6">
-      <PaginationContent>
+    <Pagination className="mt-6 max-w-full">
+      <PaginationContent className="max-w-full flex-wrap justify-center gap-1">
         <PaginationItem>
           <PaginationPrevious
             href={buildHomeHref(trimmed, Math.max(1, currentPage - 1))}

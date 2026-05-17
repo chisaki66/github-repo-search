@@ -45,15 +45,15 @@ export const RepositoryDetailView = ({
         </BackToHomeLink>
       </Suspense>
 
-      <div className="mt-8 flex items-start gap-4">
-        <Avatar className="size-16">
+      <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row">
+        <Avatar className="size-16 shrink-0">
           <AvatarImage src={repository.ownerAvatarUrl} alt="" />
           <AvatarFallback>
             {repository.ownerLogin.slice(0, 1).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="break-words text-2xl font-semibold text-foreground">
             {repository.name}
           </h1>
           <p className="mt-1 text-base text-muted-foreground">
@@ -62,7 +62,7 @@ export const RepositoryDetailView = ({
         </div>
       </div>
 
-      <dl className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-4">
+      <dl className="mt-10 grid grid-cols-2 gap-[clamp(1.5rem,4vw,2rem)] sm:grid-cols-4">
         {stats.map(({ label, key }) => (
           <div key={key}>
             <dt className="text-sm text-muted-foreground">{label}</dt>

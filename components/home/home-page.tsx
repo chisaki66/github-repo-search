@@ -108,13 +108,13 @@ const SearchForm = ({
         value={repositoryName}
         onChange={(event) => setRepositoryName(event.target.value)}
         placeholder="リポジトリ名を入力してください"
-        className="h-10 flex-1 text-base"
+        className="min-h-11 flex-1 text-base"
         autoComplete="off"
       />
       <Button
         type="submit"
         disabled={isSearching}
-        className="h-10 shrink-0 rounded-lg px-6"
+        className="min-h-11 w-full shrink-0 rounded-lg px-6 sm:w-auto"
       >
         {isSearching ? "検索中…" : "検索"}
       </Button>

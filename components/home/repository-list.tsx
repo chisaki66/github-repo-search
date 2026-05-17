@@ -26,15 +26,15 @@ export const RepositoryList = ({
               searchQuery,
               page,
             )}
-            className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+            className="flex min-w-0 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
           >
-            <Avatar>
+            <Avatar className="shrink-0">
               <AvatarImage src={repository.icon} alt="" />
               <AvatarFallback>
                 {repository.repositoryName.slice(0, 1).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="text-base font-medium text-foreground">
+            <span className="min-w-0 truncate text-base font-medium text-foreground">
               {repository.repositoryName}
             </span>
           </Link>
