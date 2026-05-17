@@ -1,47 +1,20 @@
 "use client";
 
-import { type SubmitEvent, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { type SubmitEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { RepositoryList } from "@/components/home/repository-list";
 import { SearchPagination } from "@/components/home/search-pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { RepositorySearchResult } from "@/lib/github";
 import {
   HOME_PAGE_PARAM,
   HOME_SEARCH_QUERY_PARAM,
-  buildHomeHref,
   parseHomePageParam,
 } from "@/lib/navigation/search-query-url";
-import { fetchSearchPage } from "@/lib/search/fetch-search-page";
-import { inferHasNextPage } from "@/lib/search/infer-has-next-page";
-import {
-  getCachedSearchSession,
-  getHighestCachedPage,
-} from "@/lib/search/search-results-cache";
-
-const readPageFromSession = (
-  query: string,
-  page: number,
-): { results: RepositorySearchResult[]; hasNextPage: boolean } | null => {
-  const trimmed = query.trim();
-  if (!trimmed) {
-    return null;
-  }
-
-  const session = getCachedSearchSession(trimmed);
-  const results = session?.pages?.[page];
-
-  if (!results) {
-    return null;
-  }
-
-  return {
-    results,
-    hasNextPage: inferHasNextPage(results, session.hasNextPageByPage[page]),
-  };
-};
+import { getSearchInfiniteQueryOptions } from "@/lib/search/search-query-options";
+import { useSearchQuery } from "@/lib/search/use-search-query";
 
 type SearchResultsProps = {
   searchQuery: string;
@@ -49,63 +22,12 @@ type SearchResultsProps = {
 };
 
 const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
-  const router = useRouter();
-  const cached = readPageFromSession(searchQuery, page);
-
-  const [repositories, setRepositories] = useState<RepositorySearchResult[]>(
-    () => cached?.results ?? [],
+  const { repositories, hasNextPage, isLoading } = useSearchQuery(
+    searchQuery,
+    page,
   );
-  const [hasNextPage, setHasNextPage] = useState(
-    () => cached?.hasNextPage ?? false,
-  );
-  const [isLoadingPage, setIsLoadingPage] = useState(!cached);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadPage = async () => {
-      setIsLoadingPage(true);
-
-      try {
-        const result = await fetchSearchPage(searchQuery, page);
-        if (cancelled) {
-          return;
-        }
-
-        if (result.results.length === 0 && page > 1 && !result.hasNextPage) {
-          const session = getCachedSearchSession(searchQuery);
-          const lastPage = session ? getHighestCachedPage(session) : 1;
-          const targetPage = Math.max(1, lastPage);
-
-          if (targetPage !== page) {
-            router.replace(buildHomeHref(searchQuery, targetPage));
-            return;
-          }
-        }
-
-        setRepositories(result.results);
-        setHasNextPage(result.hasNextPage);
-      } catch (error) {
-        console.error(error);
-        if (!cancelled) {
-          setRepositories([]);
-          setHasNextPage(false);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoadingPage(false);
-        }
-      }
-    };
-
-    void loadPage();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [page, router, searchQuery]);
-
-  if (repositories.length === 0 && !isLoadingPage) {
+  if (repositories.length === 0 && !isLoading) {
     return null;
   }
 
@@ -124,6 +46,7 @@ const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
 
 export const HomePage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams.get(HOME_SEARCH_QUERY_PARAM) ?? "";
   const pageFromUrl = parseHomePageParam(searchParams.get(HOME_PAGE_PARAM));
@@ -147,7 +70,9 @@ export const HomePage = () => {
 
     setIsSearching(true);
     try {
-      await fetchSearchPage(trimmed, 1);
+      await queryClient.prefetchInfiniteQuery(
+        getSearchInfiniteQueryOptions(trimmed),
+      );
 
       const nextParams = new URLSearchParams();
       nextParams.set(HOME_SEARCH_QUERY_PARAM, trimmed);
@@ -188,11 +113,7 @@ export const HomePage = () => {
         </Button>
       </form>
       {trimmedQuery ? (
-        <SearchResults
-          key={`${trimmedQuery}:${pageFromUrl}`}
-          searchQuery={trimmedQuery}
-          page={pageFromUrl}
-        />
+        <SearchResults searchQuery={trimmedQuery} page={pageFromUrl} />
       ) : null}
     </main>
   );
