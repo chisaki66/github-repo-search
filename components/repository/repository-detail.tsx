@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 
+import { PageMain } from "@/components/layout";
 import { BackToHomeLink } from "@/components/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
@@ -29,7 +30,7 @@ export const RepositoryDetailView = ({
   repository,
 }: RepositoryDetailViewProps) => {
   return (
-    <main className="min-h-0 flex-1 p-6">
+    <PageMain>
       <Suspense
         fallback={
           <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
@@ -71,6 +72,6 @@ export const RepositoryDetailView = ({
           </div>
         ))}
       </dl>
-    </main>
+    </PageMain>
   );
 };

@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 
+import { PageMain } from "@/components/layout";
 import { BackToHomeLink } from "@/components/navigation";
 import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
 
 const RepositoryNotFound = () => {
   return (
-    <main className="min-h-0 flex-1 p-6">
+    <PageMain>
       <p className="text-base text-foreground">
         リポジトリが見つかりませんでした。
       </p>
@@ -18,7 +19,7 @@ const RepositoryNotFound = () => {
       >
         <BackToHomeLink className="mt-4 inline-block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" />
       </Suspense>
-    </main>
+    </PageMain>
   );
 };
 

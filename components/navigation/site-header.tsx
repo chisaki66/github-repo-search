@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
 
+import { PageContainer } from "@/components/layout";
 import { APP_TITLE } from "@/lib/constants/app-strings";
 
 export const SiteHeader = () => {
@@ -19,7 +20,7 @@ export const SiteHeader = () => {
 
   return (
     <header className="shrink-0 border-b border-border">
-      <div className="flex h-14 items-center px-6">
+      <PageContainer className="flex h-14 items-center">
         <Link
           href="/"
           onClick={handleTitleClick}
@@ -27,7 +28,7 @@ export const SiteHeader = () => {
         >
           {APP_TITLE}
         </Link>
-      </div>
+      </PageContainer>
     </header>
   );
 };

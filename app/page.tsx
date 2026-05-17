@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 
 import { HomePage } from "@/components/home";
+import { PageMain } from "@/components/layout";
 
 const HomePageFallback = () => {
-  return <main className="min-h-0 flex-1 p-6" />;
+  return <PageMain />;
 };
 
 const Home = () => {

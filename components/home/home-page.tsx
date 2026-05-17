@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { type SubmitEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { PageMain } from "@/components/layout";
 import { RepositoryList } from "@/components/home/repository-list";
 import { SearchResultsLoading } from "@/components/home/search-results-loading";
 import { SearchPagination } from "@/components/home/search-pagination";
@@ -128,7 +129,7 @@ export const HomePage = () => {
   const trimmedQuery = queryFromUrl.trim();
 
   return (
-    <main className="min-h-0 flex-1 p-6">
+    <PageMain>
       <SearchForm
         key={queryFromUrl}
         initialQuery={queryFromUrl}
@@ -138,6 +139,6 @@ export const HomePage = () => {
       {trimmedQuery ? (
         <SearchResults searchQuery={trimmedQuery} page={pageFromUrl} />
       ) : null}
-    </main>
+    </PageMain>
   );
 };
