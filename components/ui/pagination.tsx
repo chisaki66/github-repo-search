@@ -1,3 +1,6 @@
+"use client";
+
+import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -40,13 +43,14 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">;
+  React.ComponentProps<typeof Link>;
 
 function PaginationLink({
   className,
   isActive,
   size = "icon",
   children,
+  href,
   ...props
 }: PaginationLinkProps) {
   return (
@@ -56,14 +60,15 @@ function PaginationLink({
       className={cn(className)}
       nativeButton={false}
       render={
-        <a
+        <Link
+          href={href}
           aria-current={isActive ? "page" : undefined}
           data-slot="pagination-link"
           data-active={isActive}
           {...props}
         >
           {children}
-        </a>
+        </Link>
       }
     />
   );

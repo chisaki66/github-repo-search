@@ -1,8 +1,7 @@
-import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import { PageMain } from "@/components/layout";
-import { BackToHomeLink } from "@/components/navigation";
+import { BackToHomeLinkWithSuspense } from "@/components/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
 import { foregroundHoverColor } from "@/lib/constants/design-colors";
@@ -48,26 +47,18 @@ export const RepositoryDetailView = ({
 }: RepositoryDetailViewProps) => {
   return (
     <PageMain>
-      <Suspense
-        fallback={
-          <span className={cn("inline-flex items-center", gapSm, backLinkFont)}>
-            <ArrowLeft className={iconSmSize} aria-hidden />
-            {BACK_TO_HOME_LABEL}
-          </span>
-        }
+      <BackToHomeLinkWithSuspense
+        fallbackClassName={cn("inline-flex items-center", gapSm, backLinkFont)}
+        className={cn(
+          "inline-flex items-center transition-colors",
+          gapSm,
+          backLinkFont,
+          foregroundHoverColor,
+        )}
       >
-        <BackToHomeLink
-          className={cn(
-            "inline-flex items-center transition-colors",
-            gapSm,
-            backLinkFont,
-            foregroundHoverColor,
-          )}
-        >
-          <ArrowLeft className={iconSmSize} aria-hidden />
-          {BACK_TO_HOME_LABEL}
-        </BackToHomeLink>
-      </Suspense>
+        <ArrowLeft className={iconSmSize} aria-hidden />
+        {BACK_TO_HOME_LABEL}
+      </BackToHomeLinkWithSuspense>
 
       <div
         className={cn(

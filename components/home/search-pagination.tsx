@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import {
   Pagination,
   PaginationContent,
@@ -43,7 +41,6 @@ export const SearchPagination = ({
   hasNextPage,
   resultCount,
 }: SearchPaginationProps) => {
-  const router = useRouter();
   const trimmed = searchQuery.trim();
 
   if (
@@ -59,10 +56,6 @@ export const SearchPagination = ({
     ? pages.filter((page) => page >= currentPage - 1)
     : pages;
 
-  const goToPage = (page: number) => {
-    router.push(buildHomeHref(trimmed, page));
-  };
-
   return (
     <Pagination className="mt-6 max-w-full">
       <PaginationContent className="max-w-full flex-wrap justify-center gap-1">
@@ -75,13 +68,6 @@ export const SearchPagination = ({
             }
             aria-disabled={currentPage <= 1}
             tabIndex={currentPage <= 1 ? -1 : undefined}
-            onClick={(event) => {
-              if (currentPage <= 1) {
-                return;
-              }
-              event.preventDefault();
-              goToPage(currentPage - 1);
-            }}
           />
         </PaginationItem>
 
@@ -91,10 +77,6 @@ export const SearchPagination = ({
               <PaginationLink
                 href={buildHomeHref(trimmed, 1)}
                 isActive={currentPage === 1}
-                onClick={(event) => {
-                  event.preventDefault();
-                  goToPage(1);
-                }}
               >
                 1
               </PaginationLink>
@@ -110,10 +92,6 @@ export const SearchPagination = ({
             <PaginationLink
               href={buildHomeHref(trimmed, page)}
               isActive={page === currentPage}
-              onClick={(event) => {
-                event.preventDefault();
-                goToPage(page);
-              }}
             >
               {page}
             </PaginationLink>
@@ -129,13 +107,6 @@ export const SearchPagination = ({
             }
             aria-disabled={!hasNextPage}
             tabIndex={!hasNextPage ? -1 : undefined}
-            onClick={(event) => {
-              if (!hasNextPage) {
-                return;
-              }
-              event.preventDefault();
-              goToPage(currentPage + 1);
-            }}
           />
         </PaginationItem>
       </PaginationContent>
