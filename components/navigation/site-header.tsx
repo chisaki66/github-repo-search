@@ -7,6 +7,13 @@ import type { MouseEvent } from "react";
 
 import { PageContainer } from "@/components/layout";
 import { APP_TITLE } from "@/lib/constants/app-strings";
+import {
+  borderColor,
+  foregroundMutedHoverColor,
+} from "@/lib/constants/design-colors";
+import { siteTitleFont } from "@/lib/constants/design-fonts";
+import { headerHeight } from "@/lib/constants/design-sizes";
+import { cn } from "@/lib/utils";
 
 export const SiteHeader = () => {
   const router = useRouter();
@@ -19,12 +26,16 @@ export const SiteHeader = () => {
   };
 
   return (
-    <header className="shrink-0 border-b border-border">
-      <PageContainer className="flex h-14 items-center">
+    <header className={cn("shrink-0 border-b", borderColor)}>
+      <PageContainer className={cn("flex items-center", headerHeight)}>
         <Link
           href="/"
           onClick={handleTitleClick}
-          className="text-lg font-semibold text-foreground transition-colors hover:text-foreground/80"
+          className={cn(
+            siteTitleFont,
+            "transition-colors",
+            foregroundMutedHoverColor,
+          )}
         >
           {APP_TITLE}
         </Link>

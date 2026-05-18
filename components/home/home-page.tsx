@@ -10,6 +10,12 @@ import { SearchResultsLoading } from "@/components/home/search-results-loading";
 import { SearchPagination } from "@/components/home/search-pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { baseFont, errorMessageFont } from "@/lib/constants/design-fonts";
+import {
+  buttonPaddingX,
+  errorMessageMinHeight,
+  touchTargetMinHeight,
+} from "@/lib/constants/design-sizes";
 import { cn } from "@/lib/utils";
 import {
   HOME_PAGE_PARAM,
@@ -114,7 +120,11 @@ const SearchForm = ({
         value={repositoryName}
         onChange={(event) => setRepositoryName(event.target.value)}
         placeholder="リポジトリ名を入力してください"
-        className="min-h-11 text-base sm:col-start-1 sm:row-start-1"
+        className={cn(
+          touchTargetMinHeight,
+          baseFont,
+          "sm:col-start-1 sm:row-start-1",
+        )}
         autoComplete="off"
         aria-invalid={validationError ? true : undefined}
         aria-describedby={
@@ -124,14 +134,20 @@ const SearchForm = ({
       <Button
         type="submit"
         disabled={isSearching}
-        className="min-h-11 w-full shrink-0 rounded-lg px-6 sm:col-start-2 sm:row-start-1 sm:w-auto"
+        className={cn(
+          touchTargetMinHeight,
+          buttonPaddingX,
+          "w-full shrink-0 rounded-lg sm:col-start-2 sm:row-start-1 sm:w-auto",
+        )}
       >
         {isSearching ? "検索中…" : "検索"}
       </Button>
       <p
         id="repository-search-error"
         className={cn(
-          "col-span-full min-h-5 text-sm leading-5 text-destructive max-sm:text-pretty sm:text-nowrap",
+          "col-span-full max-sm:text-pretty sm:text-nowrap",
+          errorMessageMinHeight,
+          errorMessageFont,
           !validationError && "invisible",
         )}
         role={validationError ? "alert" : undefined}

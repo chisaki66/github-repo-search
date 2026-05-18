@@ -1,0 +1,47 @@
+/**
+ * Design tokens — colors, typography, spacing, and component dimensions.
+ * Consumed by app/globals.css (@theme) and documented for Tailwind utilities.
+ */
+
+:root {
+  /* --- Colors (shadcn semantic names) --- */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* --- Typography (font-size) --- */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --line-height-sm: 1.25rem; /* 20px */
+
+  /* --- Layout & spacing --- */
+  --page-padding-inline: 1.5rem; /* 24px */
+  --spacing-section: 1.5rem; /* 24px — mt-6 */
+  --spacing-content: 2rem; /* 32px — mt-8 */
+  --spacing-stats: 2.5rem; /* 40px — mt-10 */
+  --gap-list: 0.75rem; /* 12px — gap-3 */
+  --gap-card: 1rem; /* 16px — gap-4 */
+  --padding-card: 1rem; /* 16px — p-4 */
+  --padding-button-x: 1.5rem; /* 24px — px-6 */
+  --padding-page-y: 1.5rem; /* 24px — py-6 */
+
+  /* --- Component dimensions --- */
+  --size-icon-sm: 1rem; /* 16px */
+  --size-avatar: 2rem; /* 32px */
+  --size-avatar-lg: 4rem; /* 64px */
+  --size-control: 2rem; /* 32px — h-8 */
+  --size-touch-target: 2.75rem; /* 44px — min-h-11 */
+  --size-error-line: 1.25rem; /* 20px — min-h-5 */
+  --size-header: 3.5rem; /* 56px — h-14 */
+  --radius: 0.625rem; /* 10px */
+}

@@ -5,7 +5,24 @@ import { PageMain } from "@/components/layout";
 import { BackToHomeLink } from "@/components/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
+import { foregroundHoverColor } from "@/lib/constants/design-colors";
+import {
+  backLinkFont,
+  pageHeadingFont,
+  statLabelFont,
+  statValueFont,
+  subtitleFont,
+} from "@/lib/constants/design-fonts";
+import {
+  avatarLgSize,
+  contentMarginTop,
+  gapCard,
+  gapSm,
+  iconSmSize,
+  statsMarginTop,
+} from "@/lib/constants/design-sizes";
 import type { RepositoryDetail } from "@/lib/github";
+import { cn } from "@/lib/utils";
 
 type RepositoryDetailViewProps = {
   repository: RepositoryDetail;
@@ -33,40 +50,58 @@ export const RepositoryDetailView = ({
     <PageMain>
       <Suspense
         fallback={
-          <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <ArrowLeft className="size-4" aria-hidden />
+          <span className={cn("inline-flex items-center", gapSm, backLinkFont)}>
+            <ArrowLeft className={iconSmSize} aria-hidden />
             {BACK_TO_HOME_LABEL}
           </span>
         }
       >
-        <BackToHomeLink className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
-          <ArrowLeft className="size-4" aria-hidden />
+        <BackToHomeLink
+          className={cn(
+            "inline-flex items-center transition-colors",
+            gapSm,
+            backLinkFont,
+            foregroundHoverColor,
+          )}
+        >
+          <ArrowLeft className={iconSmSize} aria-hidden />
           {BACK_TO_HOME_LABEL}
         </BackToHomeLink>
       </Suspense>
 
-      <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row">
-        <Avatar className="size-16 shrink-0">
+      <div
+        className={cn(
+          "flex flex-col items-start sm:flex-row",
+          contentMarginTop,
+          gapCard,
+        )}
+      >
+        <Avatar className={cn(avatarLgSize, "shrink-0")}>
           <AvatarImage src={repository.ownerAvatarUrl} alt="" />
           <AvatarFallback>
             {repository.ownerLogin.slice(0, 1).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0">
-          <h1 className="break-words text-2xl font-semibold text-foreground">
+          <h1 className={cn("break-words", pageHeadingFont)}>
             {repository.name}
           </h1>
-          <p className="mt-1 text-base text-muted-foreground">
+          <p className={cn("mt-1", subtitleFont)}>
             {repository.language ?? "—"}
           </p>
         </div>
       </div>
 
-      <dl className="mt-10 grid grid-cols-2 gap-[clamp(1.5rem,4vw,2rem)] sm:grid-cols-4">
+      <dl
+        className={cn(
+          "grid grid-cols-2 gap-[clamp(1.5rem,4vw,2rem)] sm:grid-cols-4",
+          statsMarginTop,
+        )}
+      >
         {stats.map(({ label, key }) => (
           <div key={key}>
-            <dt className="text-sm text-muted-foreground">{label}</dt>
-            <dd className="mt-2 text-3xl font-semibold tabular-nums text-foreground">
+            <dt className={statLabelFont}>{label}</dt>
+            <dd className={cn("mt-2", statValueFont)}>
               {formatCount(repository[key])}
             </dd>
           </div>

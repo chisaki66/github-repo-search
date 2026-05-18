@@ -3,21 +3,30 @@ import { Suspense } from "react";
 import { PageMain } from "@/components/layout";
 import { BackToHomeLink } from "@/components/navigation";
 import { BACK_TO_HOME_LABEL } from "@/lib/constants/app-strings";
+import { foregroundHoverColor } from "@/lib/constants/design-colors";
+import { backLinkFont, bodyFont } from "@/lib/constants/design-fonts";
+import { linkMarginTop } from "@/lib/constants/design-sizes";
+import { cn } from "@/lib/utils";
 
 const RepositoryNotFound = () => {
   return (
     <PageMain>
-      <p className="text-base text-foreground">
-        リポジトリが見つかりませんでした。
-      </p>
+      <p className={bodyFont}>リポジトリが見つかりませんでした。</p>
       <Suspense
         fallback={
-          <span className="mt-4 inline-block text-sm text-muted-foreground">
+          <span className={cn("inline-block", linkMarginTop, backLinkFont)}>
             {BACK_TO_HOME_LABEL}
           </span>
         }
       >
-        <BackToHomeLink className="mt-4 inline-block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" />
+        <BackToHomeLink
+          className={cn(
+            "inline-block underline-offset-4 hover:underline",
+            linkMarginTop,
+            backLinkFont,
+            foregroundHoverColor,
+          )}
+        />
       </Suspense>
     </PageMain>
   );

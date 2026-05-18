@@ -1,8 +1,20 @@
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  borderColor,
+  mutedBackgroundHoverColor,
+} from "@/lib/constants/design-colors";
+import { bodyMediumFont } from "@/lib/constants/design-fonts";
+import {
+  cardPadding,
+  gapCard,
+  gapList,
+  sectionMarginTop,
+} from "@/lib/constants/design-sizes";
 import type { RepositorySearchResult } from "@/lib/github";
 import { buildRepositoryHref } from "@/lib/navigation/search-query-url";
+import { cn } from "@/lib/utils";
 
 type RepositoryListProps = {
   repositories: RepositorySearchResult[];
@@ -16,7 +28,7 @@ export const RepositoryList = ({
   page,
 }: RepositoryListProps) => {
   return (
-    <ul className="mt-6 flex flex-col gap-3">
+    <ul className={cn("flex flex-col", sectionMarginTop, gapList)}>
       {repositories.map((repository) => (
         <li key={`${repository.ownerLogin}/${repository.repositoryName}`}>
           <Link
@@ -26,7 +38,13 @@ export const RepositoryList = ({
               searchQuery,
               page,
             )}
-            className="flex min-w-0 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+            className={cn(
+              "flex min-w-0 items-center rounded-lg border transition-colors",
+              gapCard,
+              borderColor,
+              cardPadding,
+              mutedBackgroundHoverColor,
+            )}
           >
             <Avatar className="shrink-0">
               <AvatarImage src={repository.icon} alt="" />
@@ -34,7 +52,7 @@ export const RepositoryList = ({
                 {repository.repositoryName.slice(0, 1).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="min-w-0 truncate text-base font-medium text-foreground">
+            <span className={cn("min-w-0 truncate", bodyMediumFont)}>
               {repository.repositoryName}
             </span>
           </Link>
