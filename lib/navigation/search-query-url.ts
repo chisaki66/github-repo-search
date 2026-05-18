@@ -23,6 +23,26 @@ export const parseHomePageParam = (value: string | null): number => {
   return page;
 };
 
+const formatSearchContextQuery = (
+  searchQuery?: string | null,
+  page?: number | null,
+): string | null => {
+  const trimmed = searchQuery?.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const pageNumber = page ?? 1;
+  const params = new URLSearchParams();
+  params.set(HOME_SEARCH_QUERY_PARAM, trimmed);
+
+  if (pageNumber > 1) {
+    params.set(HOME_PAGE_PARAM, String(pageNumber));
+  }
+
+  return params.toString();
+};
+
 /**
  * ホーム（`/`）への href を組み立てる。
  *
@@ -37,21 +57,8 @@ export const buildHomeHref = (
   searchQuery?: string | null,
   page?: number | null,
 ): string => {
-  const trimmed = searchQuery?.trim();
-  const pageNumber = page ?? 1;
-
-  if (!trimmed) {
-    return "/";
-  }
-
-  const params = new URLSearchParams();
-  params.set(HOME_SEARCH_QUERY_PARAM, trimmed);
-
-  if (pageNumber > 1) {
-    params.set(HOME_PAGE_PARAM, String(pageNumber));
-  }
-
-  return `/?${params.toString()}`;
+  const query = formatSearchContextQuery(searchQuery, page);
+  return query ? `/?${query}` : "/";
 };
 
 /**
@@ -69,19 +76,6 @@ export const buildRepositoryHref = (
   page?: number | null,
 ): string => {
   const base = `/repos/${encodeURIComponent(ownerLogin)}/${encodeURIComponent(repositoryName)}`;
-  const trimmed = searchQuery?.trim();
-  const pageNumber = page ?? 1;
-
-  if (!trimmed) {
-    return base;
-  }
-
-  const params = new URLSearchParams();
-  params.set(HOME_SEARCH_QUERY_PARAM, trimmed);
-
-  if (pageNumber > 1) {
-    params.set(HOME_PAGE_PARAM, String(pageNumber));
-  }
-
-  return `${base}?${params.toString()}`;
+  const query = formatSearchContextQuery(searchQuery, page);
+  return query ? `${base}?${query}` : base;
 };
