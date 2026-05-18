@@ -4,8 +4,7 @@ import {
   type RepositorySearchPage,
 } from "@/lib/validation/github/search-page-schema";
 
-/** `searchRepositories` で使う GraphQL クエリ文字列 */
-export const SEARCH_REPOSITORIES_QUERY = `
+const SEARCH_REPOSITORIES_QUERY = `
   query SearchRepositories($query: String!, $first: Int!, $after: String) {
     search(query: $query, type: REPOSITORY, first: $first, after: $after) {
       pageInfo {
@@ -28,8 +27,7 @@ export const SEARCH_REPOSITORIES_QUERY = `
   }
 `;
 
-/** `searchRepositories` の GraphQL variables */
-export type SearchRepositoriesVariables = {
+type SearchRepositoriesVariables = {
   query: string;
   first: number;
   after?: string | null;

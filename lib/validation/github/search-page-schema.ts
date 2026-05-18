@@ -10,8 +10,7 @@ import {
   pageInfoSchema,
 } from "./primitives";
 
-/** 検索一覧の 1 行分 */
-export const repositorySearchResultSchema = z.object({
+const repositorySearchResultSchema = z.object({
   icon: nonEmptyString,
   ownerLogin: nonEmptyString,
   repositoryName: nonEmptyString,
@@ -21,10 +20,8 @@ export type RepositorySearchResult = z.infer<
   typeof repositorySearchResultSchema
 >;
 
-export type RepositorySearchPageInfo = z.infer<typeof pageInfoSchema>;
-
 /** `/api/search` および React Query が扱う 1 ページ分 */
-export const repositorySearchPageSchema = z.object({
+const repositorySearchPageSchema = z.object({
   results: z.array(repositorySearchResultSchema),
   pageInfo: pageInfoSchema,
 });
@@ -48,7 +45,7 @@ const assertPaginationConsistent = (
  * GraphQL `SearchRepositories` の wire JSON を検証し `RepositorySearchPage` に変換する。
  * フィールドは `lib/github/search-repositories.ts` の GraphQL クエリと一致させる。
  */
-export const repositorySearchPageWireSchema = z
+const repositorySearchPageWireSchema = z
   .object({
     search: z.object({
       pageInfo: pageInfoSchema,
@@ -104,11 +101,11 @@ export const repositorySearchPageWireSchema = z
     }),
   );
 
-/** API が返す正規化済み JSON（クライアント向け・transform なし） */
-export const repositorySearchPageJsonSchema =
-  repositorySearchPageSchema.superRefine((page, ctx) => {
+const repositorySearchPageJsonSchema = repositorySearchPageSchema.superRefine(
+  (page, ctx) => {
     assertPaginationConsistent(page, ctx);
-  });
+  },
+);
 
 /**
  * GitHub GraphQL の検索レスポンスをパースする（サーバー側）。

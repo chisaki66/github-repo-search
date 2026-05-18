@@ -3,15 +3,10 @@ import { parseApiErrorBody } from "@/lib/validation/github/api-error-schema";
 import {
   parseRepositorySearchPageJson,
   type RepositorySearchPage,
-  type RepositorySearchPageInfo,
   type RepositorySearchResult,
 } from "@/lib/validation/github/search-page-schema";
 
-export type {
-  RepositorySearchPage,
-  RepositorySearchPageInfo,
-  RepositorySearchResult,
-};
+export type { RepositorySearchPage, RepositorySearchResult };
 
 /**
  * ブラウザから `/api/search` を呼び、一覧表示用に結果を取得する。

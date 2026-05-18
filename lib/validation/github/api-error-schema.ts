@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import { nonEmptyString } from "./primitives";
 
-/** `/api/search` 等のエラーレスポンス `{ error: string }` */
-export const apiErrorBodySchema = z.object({
+const apiErrorBodySchema = z.object({
   error: nonEmptyString,
 });
 

@@ -1,11 +1,8 @@
 /** Icon & avatar dimensions */
 export const iconSmSize = "size-4";
-export const avatarSize = "size-8";
 export const avatarLgSize = "size-16";
 
 /** Control & layout heights */
-export const controlHeight = "h-8";
-/** タップ領域の最小高さ（モバイル向けアクセシビリティ） */
 export const touchTargetMinHeight = "min-h-11";
 export const errorMessageMinHeight = "min-h-5";
 export const headerHeight = "h-14";

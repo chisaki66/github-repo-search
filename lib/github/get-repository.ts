@@ -4,8 +4,7 @@ import {
   type RepositoryDetail,
 } from "@/lib/validation/github/repository-detail-schema";
 
-/** `getRepository` で使う GraphQL クエリ文字列 */
-export const GET_REPOSITORY_QUERY = `
+const GET_REPOSITORY_QUERY = `
   query GetRepository($owner: String!, $name: String!) {
     repository(owner: $owner, name: $name) {
       name
@@ -28,8 +27,7 @@ export const GET_REPOSITORY_QUERY = `
   }
 `;
 
-/** `getRepository` の GraphQL variables */
-export type GetRepositoryVariables = {
+type GetRepositoryVariables = {
   owner: string;
   name: string;
 };

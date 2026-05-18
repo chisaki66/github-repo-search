@@ -21,8 +21,7 @@ const repositorySearchQuerySchema = z
     REPOSITORY_SEARCH_INVALID_CHARS_MESSAGE,
   );
 
-/** `parseRepositorySearchQuery` の判別可能な戻り値 */
-export type RepositorySearchValidationResult =
+type RepositorySearchValidationResult =
   | { ok: true; value: string }
   | { ok: false; error: string };
 

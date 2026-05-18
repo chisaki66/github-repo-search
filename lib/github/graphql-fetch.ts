@@ -1,10 +1,26 @@
-import {
-  createGithubGraphqlHeaders,
-  createGithubGraphqlHeadersFromEnv,
-} from "./request-headers";
+const GITHUB_GRAPHQL_API_URL = "https://api.github.com/graphql";
 
-/** GitHub GraphQL API のエンドポイント URL */
-export const GITHUB_GRAPHQL_API_URL = "https://api.github.com/graphql";
+const createGithubGraphqlHeaders = (
+  accessToken: string,
+): Record<string, string> => {
+  const trimmed = accessToken.trim();
+  if (!trimmed) {
+    throw new Error("GitHub access token is empty");
+  }
+
+  return {
+    Authorization: `Bearer ${trimmed}`,
+    "Content-Type": "application/json",
+  };
+};
+
+const createGithubGraphqlHeadersFromEnv = (): Record<string, string> => {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token?.trim()) {
+    throw new Error("GITHUB_TOKEN is not set");
+  }
+  return createGithubGraphqlHeaders(token);
+};
 
 /** `githubGraphql` に渡す GraphQL リクエスト本体 */
 export type GithubGraphqlRequest = {

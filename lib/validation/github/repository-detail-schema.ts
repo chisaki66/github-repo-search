@@ -6,8 +6,7 @@ import {
 } from "./parse-github-response";
 import { countSchema, githubOwnerSchema, nonEmptyString } from "./primitives";
 
-/** 詳細画面向けのリポジトリ情報 */
-export const repositoryDetailSchema = z.object({
+const repositoryDetailSchema = z.object({
   name: nonEmptyString,
   ownerLogin: nonEmptyString,
   ownerAvatarUrl: nonEmptyString,
@@ -24,7 +23,7 @@ export type RepositoryDetail = z.infer<typeof repositoryDetailSchema>;
  * GraphQL `GetRepository` の wire JSON を検証し `RepositoryDetail` に変換する。
  * `repository: null` は存在しないリポジトリとして `null` を返す（throw しない）。
  */
-export const repositoryDetailWireSchema = z
+const repositoryDetailWireSchema = z
   .object({
     repository: z
       .object({
@@ -54,7 +53,8 @@ export const repositoryDetailWireSchema = z
       forkCount: repository.forkCount,
       issueCount: repository.issues.totalCount,
     };
-  });
+  })
+  .pipe(repositoryDetailSchema.nullable());
 
 /**
  * GitHub GraphQL のリポジトリ詳細レスポンスをパースする。
