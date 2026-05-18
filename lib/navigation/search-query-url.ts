@@ -1,6 +1,15 @@
+/** ホーム検索の URL クエリ名（リポジトリ詳細への戻りリンクでも同じ名前を使う） */
 export const HOME_SEARCH_QUERY_PARAM = "q";
+
+/** ホーム検索のページ番号クエリ名（1 ページ目は URL に含めない） */
 export const HOME_PAGE_PARAM = "page";
 
+/**
+ * URL の `page` クエリを 1 以上の整数にパースする。
+ *
+ * @param value - `searchParams.get("page")` など
+ * @returns 未指定・空・非数・1 未満のときは `1`
+ */
 export const parseHomePageParam = (value: string | null): number => {
   if (value === null || value === "") {
     return 1;
@@ -14,6 +23,16 @@ export const parseHomePageParam = (value: string | null): number => {
   return page;
 };
 
+/**
+ * ホーム（`/`）への href を組み立てる。
+ *
+ * @param searchQuery - 省略・空のときはクエリなしの `/`
+ * @param page - `1` のときは `page` パラメータを付けない。`2` 以上で付与
+ *
+ * @example
+ * buildHomeHref("react", 1) // => "/?q=react"
+ * buildHomeHref("react", 3) // => "/?q=react&page=3"
+ */
 export const buildHomeHref = (
   searchQuery?: string | null,
   page?: number | null,
@@ -35,6 +54,14 @@ export const buildHomeHref = (
   return `/?${params.toString()}`;
 };
 
+/**
+ * リポジトリ詳細への href を組み立てる（検索文脈をクエリで引き継ぐ）。
+ *
+ * @param ownerLogin - リポジトリオーナーの login
+ * @param repositoryName - リポジトリ名
+ * @param searchQuery - 戻るときの検索語（省略可）
+ * @param page - 戻るときのページ（`buildHomeHref` と同じ規則）
+ */
 export const buildRepositoryHref = (
   ownerLogin: string,
   repositoryName: string,

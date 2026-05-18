@@ -2,17 +2,20 @@ import { SEARCH_PAGE_SIZE } from "@/lib/search/search-page-size";
 
 import type { SearchRepositoriesData } from "./search-repositories";
 
+/** 検索一覧の 1 行分（アバター URL と owner/repo 名） */
 export type RepositorySearchResult = {
   icon: string;
   ownerLogin: string;
   repositoryName: string;
 };
 
+/** 検索結果ページのページネーション情報 */
 export type RepositorySearchPageInfo = {
   hasNextPage: boolean;
   endCursor: string | null;
 };
 
+/** `/api/search` 経由で取得した 1 ページ分の検索結果 */
 export type RepositorySearchPage = {
   results: RepositorySearchResult[];
   pageInfo: RepositorySearchPageInfo;
@@ -39,6 +42,14 @@ const toSearchResults = (
   });
 };
 
+/**
+ * ブラウザから `/api/search` を呼び、一覧表示用に結果を正規化する。
+ *
+ * @param repositoryName - 検索ボックスの値（`q` パラメータ。API 側で `in:name` 付与）
+ * @param options.after - GraphQL cursor（2 ページ目以降）
+ * @returns 正規化済みの `results` と `pageInfo`
+ * @throws HTTP エラー時はレスポンス JSON の `error`、なければステータス付きメッセージ
+ */
 export const searchRepositoriesClient = async (
   repositoryName: string,
   options?: {

@@ -1,5 +1,6 @@
 import { githubGraphql } from "./graphql-fetch";
 
+/** `getRepository` で使う GraphQL クエリ文字列 */
 export const GET_REPOSITORY_QUERY = `
   query GetRepository($owner: String!, $name: String!) {
     repository(owner: $owner, name: $name) {
@@ -23,11 +24,13 @@ export const GET_REPOSITORY_QUERY = `
   }
 `;
 
+/** `getRepository` の GraphQL variables */
 export type GetRepositoryVariables = {
   owner: string;
   name: string;
 };
 
+/** `getRepository` の GraphQL レスポンス（`repository` は存在しないリポジトリで null） */
 export type GetRepositoryData = {
   repository: {
     name: string;
@@ -49,6 +52,7 @@ export type GetRepositoryData = {
   } | null;
 };
 
+/** 詳細画面向けに正規化したリポジトリ情報 */
 export type RepositoryDetail = {
   name: string;
   ownerLogin: string;
@@ -60,6 +64,12 @@ export type RepositoryDetail = {
   issueCount: number;
 };
 
+/**
+ * GraphQL レスポンスを `RepositoryDetail` に変換する。
+ *
+ * @param data - `getRepository` の GraphQL レスポンス
+ * @returns 必須フィールドが揃っているときのみオブジェクト。それ以外は `null`
+ */
 export const toRepositoryDetail = (
   data: GetRepositoryData,
 ): RepositoryDetail | null => {
@@ -84,6 +94,13 @@ export const toRepositoryDetail = (
   };
 };
 
+/**
+ * オーナーとリポジトリ名で GitHub から詳細を取得する。
+ *
+ * @param variables - `owner` と `name`
+ * @param options - 省略時は `GITHUB_TOKEN` を使用
+ * @returns 正規化済みの詳細。リポジトリが無い・必須フィールド欠落時は `null`
+ */
 export const getRepository = async (
   variables: GetRepositoryVariables,
   options?: { accessToken?: string },

@@ -1,0 +1,69 @@
+---
+description: lib と API Route では export に JSDoc を付ける
+globs: "lib/**/*.{ts,tsx},app/api/**/*.ts"
+alwaysApply: false
+---
+
+# JSDoc
+
+**再利用されるロジック・API 契約・非自明な挙動がある export には JSDoc を付ける。** 型で足りる UI コンポーネントや shadcn ラッパー、テスト、barrel の `index.ts` には原則付けない。
+
+## 対象（優先）
+
+| 場所 | 例 |
+|------|-----|
+| `lib/github/` | GraphQL クライアント、検索・詳細取得、ヘッダー生成 |
+| `lib/validation/` | バリデーション関数・許可パターン定数 |
+| `lib/navigation/` | URL パラメータ定数、`build*Href`、`parse*` |
+| `lib/search/` | フック、`getSearchInfiniteQueryOptions`、ページサイズ定数 |
+| `lib/constants/` | 仕様が読み取りにくい定数・ヘルパー（`app-strings` など） |
+| `app/api/**/route.ts` | `GET` などのクエリパラメータと HTTP ステータス |
+
+## 対象外
+
+- `components/**`（props 型で十分なことが多い）
+- `lib/utils.ts` の `cn` など一般的なユーティリティ
+- 自明な内部関数・1 モジュール内だけの非 export
+- `*.test.ts(x)`
+
+## 書き方
+
+- **言語**: ドメイン仕様は日本語。design トークン（`design-*.ts`）は既存どおり英語可。
+- **型の二重定義はしない**: `@param {string}` は使わず、TypeScript の型を正とする。
+- **export 関数**: 概要 + 必要なら `@param` / `@returns` / `@throws`。非自明な仕様には `@example` を 1 つ。
+- **export 型・定数**: 1 行の `/** ... */` で用途を書く（URL パラメータ名、バリデーション規則など）。
+- **ユーザー向け文言**: `app-strings` の全文は JSDoc にコピーしない。どの関数で使うかだけ書く。
+
+## 例
+
+```ts
+// ❌ BAD — 型を JSDoc で重複
+/**
+ * @param {string} userInput
+ */
+
+// ✅ GOOD
+/**
+ * ユーザー入力を GitHub リポジトリ名検索用のクエリ文字列に変換する。
+ *
+ * @param userInput - 検索ボックスの生入力（前後空白は trim される）
+ * @returns 空または空白のみのときは `""`。それ以外は `{trimmed} in:name`
+ */
+export const buildRepositorySearchQuery = (userInput: string): string => { ... };
+```
+
+```ts
+// ✅ GOOD — API Route
+/**
+ * GitHub リポジトリ検索 API（GraphQL プロキシ）。
+ *
+ * **クエリパラメータ**
+ * - `q`（必須）: ...
+ * **レスポンス**
+ * - 200: ...
+ * - 400: ...
+ */
+export const GET = async (request: Request) => { ... };
+```
+
+新規 export を追加するとき、同ディレクトリの既存 JSDoc の粒度・言語に合わせる。

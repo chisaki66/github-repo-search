@@ -8,6 +8,16 @@ import { buildHomeHref } from "@/lib/navigation/search-query-url";
 
 import { getSearchInfiniteQueryOptions } from "./search-query-options";
 
+/**
+ * ホーム検索の URL `page` と React Query の infinite ページを同期するフック。
+ *
+ * - 未ロードのページは `fetchNextPage` で補う
+ * - 範囲外のページや空ページは `router.replace` で URL を補正する
+ *
+ * @param query - URL の検索語
+ * @param page - URL の 1 始まりのページ番号
+ * @returns 現在ページの `repositories`、`hasNextPage`、データ準備中の `isLoading`
+ */
 export const useSearchQuery = (query: string, page: number) => {
   const router = useRouter();
   const trimmed = query.trim();

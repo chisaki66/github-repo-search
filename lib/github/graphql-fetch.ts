@@ -3,8 +3,10 @@ import {
   createGithubGraphqlHeadersFromEnv,
 } from "./request-headers";
 
+/** GitHub GraphQL API のエンドポイント URL */
 export const GITHUB_GRAPHQL_API_URL = "https://api.github.com/graphql";
 
+/** `githubGraphql` に渡す GraphQL リクエスト本体 */
 export type GithubGraphqlRequest = {
   query: string;
   variables?: Record<string, unknown>;
@@ -23,6 +25,16 @@ const resolveAuthHeaders = (accessToken?: string): Record<string, string> => {
   return createGithubGraphqlHeadersFromEnv();
 };
 
+/**
+ * GitHub GraphQL API に POST し、`data` フィールドを返す。
+ *
+ * `options.accessToken` を省略すると `GITHUB_TOKEN` 環境変数を使う。
+ * レスポンスの `errors`、非 OK の HTTP、JSON パース失敗、`data` 欠落時はいずれも throw する。
+ *
+ * @param request - GraphQL クエリと任意の variables
+ * @param options - 省略時は環境変数からトークンを解決
+ * @returns パース済みの `data` オブジェクト
+ */
 export const githubGraphql = async <TData>(
   request: GithubGraphqlRequest,
   options?: { accessToken?: string },

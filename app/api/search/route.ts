@@ -52,6 +52,21 @@ const handleSearchFailure = (error: unknown) => {
   return jsonError("GitHub search failed", 502);
 };
 
+/**
+ * GitHub リポジトリ検索 API（GraphQL プロキシ）。
+ *
+ * **クエリパラメータ**
+ * - `q`（必須）: リポジトリ名。`parseRepositorySearchQuery` で検証後 `in:name` 付きで検索
+ * - `first`（任意）: 1–100。省略時は `SEARCH_PAGE_SIZE`
+ * - `after`（任意）: GraphQL cursor（2 ページ目以降）
+ *
+ * **レスポンス**
+ * - 200: GitHub GraphQL の `search` オブジェクトを JSON で返す
+ * - 400: `q` 欠落・検証失敗・`first` 不正
+ * - 429: レート制限・ abuse
+ * - 502: 認証失敗・その他 GitHub エラー
+ * - 503: `GITHUB_TOKEN` 未設定
+ */
 export const GET = async (request: Request) => {
   const url = new URL(request.url);
   const qRaw = url.searchParams.get("q") ?? "";
