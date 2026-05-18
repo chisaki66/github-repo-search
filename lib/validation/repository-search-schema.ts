@@ -1,14 +1,20 @@
 import { z } from "zod";
 
-import { REPOSITORY_SEARCH_INVALID_CHARS_MESSAGE } from "@/lib/constants/app-strings";
+import {
+  REPOSITORY_SEARCH_INVALID_CHARS_MESSAGE,
+  REPOSITORY_SEARCH_TOO_LONG_MESSAGE,
+} from "@/lib/constants/app-strings";
 
 /** GitHub リポジトリ名および `in:name` 検索で安全に使える文字 */
 export const REPOSITORY_SEARCH_ALLOWED_PATTERN = /^[A-Za-z0-9._-]+$/;
+
+export const REPOSITORY_SEARCH_MAX_LENGTH = 100;
 
 const repositorySearchQuerySchema = z
   .string()
   .trim()
   .min(1)
+  .max(REPOSITORY_SEARCH_MAX_LENGTH, REPOSITORY_SEARCH_TOO_LONG_MESSAGE)
   .regex(
     REPOSITORY_SEARCH_ALLOWED_PATTERN,
     REPOSITORY_SEARCH_INVALID_CHARS_MESSAGE,
