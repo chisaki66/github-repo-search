@@ -25,22 +25,19 @@ export const useSearchQuery = (query: string, page: number) => {
   const infiniteQuery = useInfiniteQuery(
     getSearchInfiniteQueryOptions(trimmed),
   );
+  const { fetchNextPage, isFetchingNextPage } = infiniteQuery;
 
   const loadedPageCount = infiniteQuery.data?.pages.length ?? 0;
   const needsMorePages =
     trimmed.length > 0 && page > loadedPageCount && infiniteQuery.hasNextPage;
 
   useEffect(() => {
-    if (!needsMorePages || infiniteQuery.isFetchingNextPage) {
+    if (!needsMorePages || isFetchingNextPage) {
       return;
     }
 
-    void infiniteQuery.fetchNextPage();
-  }, [
-    needsMorePages,
-    infiniteQuery.isFetchingNextPage,
-    infiniteQuery.fetchNextPage,
-  ]);
+    void fetchNextPage();
+  }, [needsMorePages, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     if (
