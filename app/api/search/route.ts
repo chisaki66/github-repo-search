@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { buildRepositorySearchQuery, searchRepositories } from "@/lib/github";
 import { SEARCH_PAGE_SIZE } from "@/lib/search/search-page-size";
+import { parseRepositorySearchQuery } from "@/lib/validation/repository-search-schema";
 
 export const runtime = "nodejs";
 
@@ -53,9 +54,14 @@ const handleSearchFailure = (error: unknown) => {
 
 export const GET = async (request: Request) => {
   const url = new URL(request.url);
-  const q = url.searchParams.get("q")?.trim() ?? "";
-  if (!q) {
+  const qRaw = url.searchParams.get("q") ?? "";
+  if (!qRaw.trim()) {
     return jsonError("Missing or empty query parameter q", 400);
+  }
+
+  const parsedQuery = parseRepositorySearchQuery(qRaw);
+  if (!parsedQuery.ok) {
+    return jsonError(parsedQuery.error, 400);
   }
 
   const first = parseFirstFromSearchParam(url.searchParams.get("first"));
@@ -71,7 +77,7 @@ export const GET = async (request: Request) => {
 
   try {
     const data = await searchRepositories({
-      query: buildRepositorySearchQuery(q),
+      query: buildRepositorySearchQuery(parsedQuery.value),
       first,
       after,
     });

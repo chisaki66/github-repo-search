@@ -10,6 +10,7 @@ import { SearchResultsLoading } from "@/components/home/search-results-loading";
 import { SearchPagination } from "@/components/home/search-pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import {
   HOME_PAGE_PARAM,
   HOME_SEARCH_QUERY_PARAM,
@@ -17,6 +18,10 @@ import {
 } from "@/lib/navigation/search-query-url";
 import { getSearchInfiniteQueryOptions } from "@/lib/search/search-query-options";
 import { useSearchQuery } from "@/lib/search/use-search-query";
+import {
+  getRepositorySearchValidationError,
+  parseRepositorySearchQuery,
+} from "@/lib/validation/repository-search-schema";
 
 type SearchResultsProps = {
   searchQuery: string;
@@ -69,25 +74,26 @@ const SearchForm = ({
   const queryClient = useQueryClient();
   const [repositoryName, setRepositoryName] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
+  const validationError = getRepositorySearchValidationError(repositoryName);
 
   const handleSearch = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const trimmed = repositoryName.trim();
-    if (!trimmed || isSearching) {
+    const parsed = parseRepositorySearchQuery(repositoryName);
+    if (!parsed.ok || isSearching) {
       return;
     }
 
     setIsSearching(true);
     try {
       await queryClient.prefetchInfiniteQuery(
-        getSearchInfiniteQueryOptions(trimmed),
+        getSearchInfiniteQueryOptions(parsed.value),
       );
 
       const nextParams = new URLSearchParams();
-      nextParams.set(HOME_SEARCH_QUERY_PARAM, trimmed);
+      nextParams.set(HOME_SEARCH_QUERY_PARAM, parsed.value);
 
-      if (trimmed !== queryFromUrl.trim() || pageFromUrl !== 1) {
+      if (parsed.value !== queryFromUrl.trim() || pageFromUrl !== 1) {
         router.replace(`/?${nextParams.toString()}`);
       }
     } catch (error) {
@@ -100,7 +106,7 @@ const SearchForm = ({
   return (
     <form
       onSubmit={handleSearch}
-      className="flex max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
+      className="grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-y-1.5"
     >
       <Input
         type="search"
@@ -108,16 +114,31 @@ const SearchForm = ({
         value={repositoryName}
         onChange={(event) => setRepositoryName(event.target.value)}
         placeholder="リポジトリ名を入力してください"
-        className="min-h-11 flex-1 text-base"
+        className="min-h-11 text-base sm:col-start-1 sm:row-start-1"
         autoComplete="off"
+        aria-invalid={validationError ? true : undefined}
+        aria-describedby={
+          validationError ? "repository-search-error" : undefined
+        }
       />
       <Button
         type="submit"
         disabled={isSearching}
-        className="min-h-11 w-full shrink-0 rounded-lg px-6 sm:w-auto"
+        className="min-h-11 w-full shrink-0 rounded-lg px-6 sm:col-start-2 sm:row-start-1 sm:w-auto"
       >
         {isSearching ? "検索中…" : "検索"}
       </Button>
+      <p
+        id="repository-search-error"
+        className={cn(
+          "col-span-full min-h-5 text-sm leading-5 text-destructive max-sm:text-pretty sm:text-nowrap",
+          !validationError && "invisible",
+        )}
+        role={validationError ? "alert" : undefined}
+        aria-hidden={!validationError}
+      >
+        {validationError ?? "\u00a0"}
+      </p>
     </form>
   );
 };
@@ -127,6 +148,9 @@ export const HomePage = () => {
   const queryFromUrl = searchParams.get(HOME_SEARCH_QUERY_PARAM) ?? "";
   const pageFromUrl = parseHomePageParam(searchParams.get(HOME_PAGE_PARAM));
   const trimmedQuery = queryFromUrl.trim();
+  const isQueryValid =
+    trimmedQuery.length > 0 &&
+    getRepositorySearchValidationError(queryFromUrl) === null;
 
   return (
     <PageMain>
@@ -136,7 +160,7 @@ export const HomePage = () => {
         queryFromUrl={queryFromUrl}
         pageFromUrl={pageFromUrl}
       />
-      {trimmedQuery ? (
+      {isQueryValid ? (
         <SearchResults searchQuery={trimmedQuery} page={pageFromUrl} />
       ) : null}
     </PageMain>
