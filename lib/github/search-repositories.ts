@@ -1,4 +1,8 @@
 import { githubGraphql } from "./graphql-fetch";
+import {
+  parseRepositorySearchPage,
+  type RepositorySearchPage,
+} from "@/lib/validation/github/search-page-schema";
 
 /** `searchRepositories` で使う GraphQL クエリ文字列 */
 export const SEARCH_REPOSITORIES_QUERY = `
@@ -31,36 +35,13 @@ export type SearchRepositoriesVariables = {
   after?: string | null;
 };
 
-/** 検索結果 1 件のオーナー情報 */
-export type SearchRepositoryOwner = {
-  login: string;
-  avatarUrl: string;
-};
-
-/** 検索結果 1 件のリポジトリノード */
-export type SearchRepositoryNode = {
-  name: string;
-  owner: SearchRepositoryOwner;
-};
-
-/** `searchRepositories` の GraphQL レスポンス */
-export type SearchRepositoriesData = {
-  search: {
-    pageInfo: {
-      hasNextPage: boolean;
-      endCursor: string | null;
-    };
-    edges: Array<{
-      cursor: string;
-      node: SearchRepositoryNode | null;
-    } | null> | null;
-  };
-};
+export type { RepositorySearchPage };
 
 /**
  * GitHub GraphQL でリポジトリを検索する（サーバー側）。
  *
  * `after` が空でないときだけ variables に含める（初回ページは省略）。
+ * レスポンスは Zod で検証・正規化した {@link RepositorySearchPage} を返す。
  *
  * @param variables - 検索クエリ・`first`・任意の cursor `after`
  * @param options - 省略時は `GITHUB_TOKEN` を使用
@@ -68,9 +49,9 @@ export type SearchRepositoriesData = {
 export const searchRepositories = async (
   variables: SearchRepositoriesVariables,
   options?: { accessToken?: string },
-): Promise<SearchRepositoriesData> => {
+): Promise<RepositorySearchPage> => {
   const { query, first, after } = variables;
-  return githubGraphql<SearchRepositoriesData>(
+  const raw = await githubGraphql<unknown>(
     {
       query: SEARCH_REPOSITORIES_QUERY,
       variables:
@@ -80,4 +61,6 @@ export const searchRepositories = async (
     },
     options,
   );
+
+  return parseRepositorySearchPage(raw);
 };

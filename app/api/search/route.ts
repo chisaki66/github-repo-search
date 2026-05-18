@@ -45,6 +45,13 @@ const handleSearchFailure = (error: unknown) => {
     return jsonError("GitHub API rate limit or access denied", 429);
   }
 
+  if (
+    message.includes("Invalid GitHub search response") ||
+    message.includes("Invalid GitHub repository response")
+  ) {
+    return jsonError("GitHub returned an unexpected response", 502);
+  }
+
   if (message) {
     return jsonError(message, 502);
   }
@@ -61,7 +68,7 @@ const handleSearchFailure = (error: unknown) => {
  * - `after`（任意）: GraphQL cursor（2 ページ目以降）
  *
  * **レスポンス**
- * - 200: GitHub GraphQL の `search` オブジェクトを JSON で返す
+ * - 200: 正規化済み `RepositorySearchPage`（`results` + `pageInfo`）を JSON で返す
  * - 400: `q` 欠落・検証失敗・`first` 不正
  * - 429: レート制限・ abuse
  * - 502: 認証失敗・その他 GitHub エラー
