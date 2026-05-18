@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { PageMain } from "@/components/layout";
 import { RepositoryList } from "@/components/home/repository-list";
+import { SearchResultsEmpty } from "@/components/home/search-results-empty";
 import { SearchResultsLoading } from "@/components/home/search-results-loading";
 import { SearchPagination } from "@/components/home/search-pagination";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,7 @@ const SearchResults = ({ searchQuery, page }: SearchResultsProps) => {
   }
 
   if (repositories.length === 0) {
-    return null;
+    return <SearchResultsEmpty searchQuery={searchQuery} />;
   }
 
   return (

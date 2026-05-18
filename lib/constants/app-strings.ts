@@ -13,6 +13,14 @@ export const REPOSITORY_SEARCH_TOO_LONG_MESSAGE =
   "リポジトリ名は100文字以内で入力してください。";
 
 /**
+ * 検索結果が 0 件のときに表示するメッセージを組み立てる。
+ *
+ * @param repositoryName - 検索ボックスに入力されたリポジトリ名
+ */
+export const formatSearchNoResultsMessage = (repositoryName: string) =>
+  `「${repositoryName}」に一致するリポジトリは見つかりませんでした。別のキーワードでお試しください。`;
+
+/**
  * ページ固有の metadata `title` を組み立てる。
  *
  * @param segment - ページ識別子（例: `facebook/react`）
